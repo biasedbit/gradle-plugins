@@ -24,7 +24,35 @@ To add to all subprojects of a multi-project build:
 
 ```groovy
 subprojects {
-    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/integration-test.gradle'
+  apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/integration-test.gradle'
+}
+```
+
+#### ProTip™**
+
+If you're building projects with IntelliJ idea, you can automatically add the integration test sources by configuring the `module` model's test sources:
+
+```groovy
+idea {
+  // ...
+  module {
+    testSourceDirs += file('src/integration-test/java')
+  }
+}
+```
+
+Or, if you're using a multi-project build:
+
+```groovy
+// On the root project's build.gradle
+subprojects {
+  // ...
+  idea {
+    module {
+      testSourceDirs += file('src/integration-test/java')
+      testSourceDirs += file('src/integration-test/groovy')
+    }
+  }
 }
 ```
 
@@ -45,7 +73,7 @@ Apply on the root `build.gradle` project:
 
 ```groovy
 allprojects {
-    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/jacoco-multiproject-aggregator.gradle'
+  apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/jacoco-multiproject-aggregator.gradle'
 }
 ```
 
