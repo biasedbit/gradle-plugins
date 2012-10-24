@@ -1,0 +1,130 @@
+/**
+ * JaCoCo code coverage tracking for Gradle multi-projects.
+ *
+ * This plugin is specific for multi-project builds:
+ *   - It only tracks code on subprojects
+ *   - It only generates a single aggregated coverage report that includes all subprojects
+ */
+
+apply plugin: 'java'
+
+def jacocoVersion = '0.6.0.201210061924'
+def isSubproject = project.parent != null
+def trackCoverage = isSubproject
+
+configurations { jacoco }
+
+dependencies {
+  jacoco "org.jacoco:org.jacoco.agent:${jacocoVersion}"
+  jacoco "org.jacoco:org.jacoco.ant:${jacocoVersion}"
+}
+
+
+def jacocoConvention = new JacocoPluginConvention(project)
+project.convention.plugins.jacoco = jacocoConvention
+
+class JacocoPluginConvention {
+  def reportPath
+  def tmpDir
+  def coverageFile
+  def includes
+  def excludes
+  def exclclassloader
+  def append
+  def dumponexit
+  def output
+
+  def jacoco(Closure close) {
+    close.delegate = this
+    close.run()
+  }
+
+  JacocoPluginConvention(Project project) {
+    reportPath = "${project.reporting.baseDir.absolutePath}/coverage"
+    tmpDir = "${project.buildDir}/tmp"
+    coverageFile = "${tmpDir}/jacoco.exec"
+    includes = []
+    excludes = []
+    exclclassloader = []
+    append = false
+    dumponexit = true
+    output = 'file'
+  }
+
+  def getParams() {
+    def params = [:]
+    params['property'] = 'agentvmparam'
+    params['destfile'] = coverageFile
+
+    if (includes != null && includes.size > 0) params['includes'] = includes.join(':')
+    if (excludes != null && excludes.size > 0) params['excludes'] = excludes.join(':')
+    if (exclclassloader != null && exclclassloader.size > 0) params['exclclassloader'] = exclclassloader
+
+    params['append'] = append
+    params['dumponexit'] = dumponexit
+    params['output'] = output
+
+    params
+  }
+}
+
+// Only apply code coverage to subprojects
+if (trackCoverage) {
+  println "Tracking code coverage for '${project.name}'"
+  test {
+    doFirst {
+      ant.taskdef(
+          name:      'jacocoagent',
+          classname: 'org.jacoco.ant.AgentTask',
+          classpath: configurations.jacoco.asPath
+      )
+      ant.jacocoagent jacocoConvention.params
+      jvmArgs "${ant.properties.agentvmparam}"
+    }
+  }
+} else {
+  println "Skipping coverage for '${project.name}'"
+}
+
+// This aggregate report task is only available to the parent project
+if (!isSubproject) {
+  task coverageReport << {
+    ant.taskdef(
+        name:      'jacocoreport',
+        classname: 'org.jacoco.ant.ReportTask',
+        classpath: configurations.jacoco.asPath
+    )
+    ant.mkdir dir: jacocoConvention.reportPath
+
+    ant.jacocoreport {
+      executiondata {
+        subprojects.each { subproject ->
+          def subprojectCoverageFile = subproject.convention.plugins.jacoco.coverageFile
+          println "Adding jacoco.exec for '${subproject.name}' (${subprojectCoverageFile})"
+          ant.file file: "${subprojectCoverageFile}"
+        }
+      }
+      structure(name: project.name) {
+        subprojects.each { subproject ->
+          group(name: subproject.name) {
+            classfiles {
+              fileset dir: "${subproject.sourceSets.main.output.classesDir}"
+            }
+            sourcefiles {
+              subproject.sourceSets.main.java.srcDirs.each {
+                fileset dir: it.absolutePath
+              }
+            }
+          }
+        }
+      }
+      html destdir: jacocoConvention.reportPath
+    }
+    println "Aggregated coverage report generated to '${jacocoConvention.reportPath}/index.html'"
+  }
+
+  // Make sure that all subproject have been evaluated and their tasks defined before defining this dependency
+  gradle.projectsEvaluated {
+    coverageReport.dependsOn(subprojects.test)
+  }
+}
