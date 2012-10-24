@@ -17,14 +17,14 @@ Adds integration testing to Gradle projects.
 ### How to use
 
 ```groovy
-apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/integration-test.gradle'
+apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/integration-test.gradle'
 ```
 
 To add to all subprojects of a multi-project build:
 
 ```groovy
 subprojects {
-    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/integration-test.gradle'
+    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/integration-test.gradle'
 }
 ```
 
@@ -45,7 +45,7 @@ Apply on the root `build.gradle` project:
 
 ```groovy
 allprojects {
-    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/jacoco-multiproject-aggregator.gradle'
+    apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/jacoco-multiproject-aggregator.gradle'
 }
 ```
 
