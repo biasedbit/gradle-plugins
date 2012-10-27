@@ -100,13 +100,17 @@ if (!isSubproject) {
       executiondata {
         subprojects.each { subproject ->
           def subprojectCoverageFile = subproject.convention.plugins.jacoco.coverageFile
-          println "Adding jacoco.exec for '${subproject.name}' (${subprojectCoverageFile})"
-          ant.file file: "${subprojectCoverageFile}"
+          if (file(subprojectCoverageFile).exists()) {
+            println "* Adding jacoco.exec for '${subproject.name}' (${subprojectCoverageFile})."
+            ant.file file: "${subprojectCoverageFile}"
+          } else {
+            println "! Skipping '${subproject.name}', no jacoco.exec found."
+          }
         }
       }
-      structure(name: project.name) {
+      structure(name: project.description) {
         subprojects.each { subproject ->
-          group(name: subproject.name) {
+          group(name: subproject.displayName) {
             classfiles {
               fileset dir: "${subproject.sourceSets.main.output.classesDir}"
             }
@@ -120,7 +124,7 @@ if (!isSubproject) {
       }
       html destdir: jacocoConvention.reportPath
     }
-    println "Aggregated coverage report generated to '${jacocoConvention.reportPath}/index.html'"
+    println "* Aggregated coverage report generated to '${jacocoConvention.reportPath}/index.html'"
   }
 
   // Make sure that all subproject have been evaluated and their tasks defined before defining this dependency
