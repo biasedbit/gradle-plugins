@@ -70,7 +70,7 @@ class JacocoPluginConvention {
 
 // Only apply code coverage to subprojects
 if (trackCoverage) {
-  println "Tracking code coverage for '${project.name}'"
+  logger.info "Tracking code coverage for '${project.name}'"
   test {
     doFirst {
       ant.taskdef(
@@ -83,7 +83,7 @@ if (trackCoverage) {
     }
   }
 } else {
-  println "Skipping coverage for '${project.name}'"
+  logger.info "Skipping coverage for '${project.name}'"
 }
 
 // This aggregate report task is only available to the parent project
@@ -101,10 +101,10 @@ if (!isSubproject) {
         subprojects.each { subproject ->
           def subprojectCoverageFile = subproject.convention.plugins.jacoco.coverageFile
           if (file(subprojectCoverageFile).exists()) {
-            println "* Adding jacoco.exec for '${subproject.name}' (${subprojectCoverageFile})."
+            logger.info "* Adding jacoco.exec for '${subproject.name}' (${subprojectCoverageFile})."
             ant.file file: "${subprojectCoverageFile}"
           } else {
-            println "! Skipping '${subproject.name}', no jacoco.exec found."
+            logger.info "! Skipping '${subproject.name}', no jacoco.exec found."
           }
         }
       }
@@ -124,11 +124,11 @@ if (!isSubproject) {
       }
       html destdir: jacocoConvention.reportPath
     }
-    println "* Aggregated coverage report generated to '${jacocoConvention.reportPath}/index.html'"
+    logger.info "* Aggregated coverage report generated to '${jacocoConvention.reportPath}/index.html'"
   }
 
   // Make sure that all subproject have been evaluated and their tasks defined before defining this dependency
   gradle.projectsEvaluated {
-    coverageReport.dependsOn(subprojects.test)
+    coverageReport.dependsOn subprojects.check
   }
 }
