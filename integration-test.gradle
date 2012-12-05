@@ -2,17 +2,19 @@
 
 // Add integration test source sets (currently only for java)
 sourceSets {
-  integrationTest {
-    java.srcDir file('src/integration-test/java')
-    resources.srcDir file('src/integration-test/resources')
+  integrationTest { sourceSet ->
+    ["java", "groovy", "scala", "resources"].each {
+      if (!sourceSet.hasProperty(it)) return
+      sourceSet."$it".srcDir file("src/integration-test/${it}")
+    }
   }
 }
 
 // Setup dependencies for integration testing
 dependencies {
   integrationTestCompile sourceSets.main.output
-  integrationTestCompile configurations.testCompile
   integrationTestCompile sourceSets.test.output
+  integrationTestCompile configurations.testCompile
   integrationTestRuntime configurations.testRuntime
 }
 

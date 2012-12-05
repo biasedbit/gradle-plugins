@@ -6,13 +6,11 @@ This is a collection of handy Gradle plugins I end up using over and over.
 
 ## integration-test
 
-Adds integration testing to Gradle projects.
+Adds integration testing to Gradle projects, supporting java, groovy and scala. It's completely dynamic, so it'll only add source directories for the source plugins you have (e.g. `java`, `resources` and `groovy` but not `scala`).
 
 ### How it works
 
-* Requires previously applied Java plugin;
-* Integration test sources must live under `src/integration-test/java`;
-* Integration test resources must live under `src/integration-test/resources`.
+* It'll automatically pick directories under `src/integration-test/` that match `java`, `resources`, `groovy` and `scala`, depending on whether you have any (or all) of those plugins enabled.
 
 ### How to use
 
@@ -28,7 +26,7 @@ subprojects {
 }
 ```
 
-#### ProTip™**
+#### ProTip™
 
 If you're building projects with IntelliJ idea, you can automatically add the integration test sources by configuring the `module` model's test sources:
 
