@@ -22,7 +22,6 @@ dependencies {
 task integrationTest(type: Test) {
   testClassesDir = sourceSets.integrationTest.output.classesDir
   classpath = sourceSets.integrationTest.runtimeClasspath
-  // TODO make this dependent on gradle variables ...
   testReportDir = file("$buildDir/integration-test-reports")
 }
 

@@ -15,7 +15,7 @@ Adds integration testing to Gradle projects, supporting java, groovy and scala. 
 ### How to use
 
 ```groovy
-apply from: 'https://raw.github.com/ascheman/gradle-plugins/master/integration-test.gradle'
+apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/integration-test.gradle'
 ```
 
 To add to all subprojects of a multi-project build:
@@ -71,7 +71,7 @@ Apply on the root `build.gradle` project:
 
 ```groovy
 allprojects {
-  apply from: 'https://raw.github.com/ascheman/gradle-plugins/master/jacoco-multiproject-aggregator.gradle'
+  apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/jacoco-multiproject-aggregator.gradle'
 }
 ```
 
