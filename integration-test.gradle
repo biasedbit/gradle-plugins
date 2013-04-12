@@ -1,6 +1,6 @@
-// Assumes apply: 'java' has been done somewhere before
+// Assumes 'java', 'groovy' or 'scala' plugins have been applied before
 
-// Add integration test source sets (currently only for java)
+// Add integration test source sets
 sourceSets {
   integrationTest { sourceSet ->
     ["java", "groovy", "scala", "resources"].each {
@@ -24,5 +24,5 @@ task integrationTest(type: Test) {
   classpath = sourceSets.integrationTest.runtimeClasspath
 }
 
-// Make sure check calls integration test
+// Make sure 'check' task calls integration test
 check.dependsOn integrationTest
