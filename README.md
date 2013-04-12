@@ -55,6 +55,19 @@ subprojects {
 ```
 
 
+## colored-test-output
+
+A picture worth a thousand words:
+
+![colored test output sample](http://d.pr/i/8Jrg.png)
+
+### How to use
+
+```groovy
+apply from: 'https://raw.github.com/brunodecarvalho/gradle-plugins/master/colored-test-output.gradle'
+```
+
+
 ## jacoco-multiproject-aggregator
 
 Adds coverage reports for multi-project Gradle projects.
