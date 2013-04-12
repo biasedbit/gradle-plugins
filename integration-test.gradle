@@ -22,6 +22,7 @@ dependencies {
 task integrationTest(type: Test) {
   testClassesDir = sourceSets.integrationTest.output.classesDir
   classpath = sourceSets.integrationTest.runtimeClasspath
+  testReportDir = file("$buildDir/integration-test-reports")
 }
 
 // Make sure 'check' task calls integration test
