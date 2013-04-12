@@ -1,0 +1,25 @@
+import org.gradle.logging.StyledTextOutput
+import org.gradle.logging.StyledTextOutputFactory
+import static org.gradle.logging.StyledTextOutput.Style
+
+System.setProperty("org.gradle.color.failure", "RED")
+System.setProperty("org.gradle.color.progressstatus", "YELLOW")
+System.setProperty("org.gradle.color.success", "GREEN")
+
+test {
+  def out = services.get(StyledTextOutputFactory).create("colored-test-output")
+  out.style(Style.Normal)
+
+  beforeSuite { suite ->
+    if (suite.name.startsWith("Test Run") || suite.name.startsWith("Gradle Worker")) return
+    out.println("\n" + suite.name)
+  }
+  afterTest { descriptor, result ->
+    def style
+    if (result.failedTestCount > 0) style = Style.Failure
+    else if (result.skippedTestCount > 0) style = Style.ProgressStatus
+    else style = Style.Success
+
+    out.text('  ').withStyle(style).println(descriptor.name)
+  }
+}
