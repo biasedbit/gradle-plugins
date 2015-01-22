@@ -94,3 +94,7 @@ The plugin must be applied to all subprojects. Here's what happens:
 * If the project is the root project, a new task, `coverageReport`, is created.
 
 The `coverageReport` task depends on `test` task so from a clean project, running `gradle coverageReport` will test the code and generate a coverage report.
+
+### License
+
+MIT.
