@@ -6,11 +6,11 @@ This is a collection of handy Gradle plugins I end up using over and over.
 
 ## integration-test
 
-Adds integration testing to Gradle projects, supporting java, groovy and scala. It's completely dynamic, so it'll only add source directories for the source plugins you have (e.g. `java`, `resources` and `groovy` but not `scala`).
+Adds integration testing to Gradle projects, supporting Java, Groovy, Kotlin and Scala. It's completely dynamic, so it'll only add source directories for the source plugins you have (e.g. `java`, `resources`, `groovy` and `kotlin` but not `scala`).
 
 ### How it works
 
-* It'll automatically pick directories under `src/integration-test/` that match `java`, `resources`, `groovy` and `scala`, depending on whether you have any (or all) of those plugins enabled.
+* It'll automatically pick directories under `src/integration-test/` that match `java`, `resources`, `groovy`, `kotlin` and `scala`, depending on whether you have any (or all) of those plugins enabled.
 
 ### How to use
 
